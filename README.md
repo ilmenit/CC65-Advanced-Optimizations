@@ -1131,6 +1131,19 @@ The fastest code is one that is not executed so think if you really need to do c
 * Maybe you can use lookup tables?
 * Maybe you can calculate the result in advance?
 
+### Increasing and decreasing variables
+
+CC65 does not do high-level optimizations and to increase (or similarly decrease) value of variable use preincrement operator.
+```C
+    // instead of 
+    a = a + 1;
+   // or
+    a += 1;
+    // use:
+    ++a;
+```
+This will be translated into a single "INC variable" assembler instruction.
+
 ### Drawing single pixels on the screen and interrupt handlers
 
 Usually these are so time-critical, that should be done in assembler.
