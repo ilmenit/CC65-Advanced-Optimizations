@@ -1106,6 +1106,10 @@ In case of using Altirra emulator:
 
 The example above does not cover all the cases. Here are a few that you will meet writing programs in CC65
 
+### Dynamic memory allocations
+
+Shortly, forget about malloc()/free() and use static buffers for everything. On 6502 we have so small memory and dynamic allocation so big overhead, that it makes both code size and speed very poor. Additionally deallocations of memory will lead to [memory fragmentation](https://en.wikipedia.org/wiki/Fragmentation_(computing)) that may prevent further allocations.
+
 ### Multidimensional arrays
 
 2-dimensional arrays are often used to store game maps or game boards.
