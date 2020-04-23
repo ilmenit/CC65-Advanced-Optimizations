@@ -1,0 +1,6 @@
+*.xex
+*.lst
+*.lab
+*.obx
+*.pck
+/.vs
