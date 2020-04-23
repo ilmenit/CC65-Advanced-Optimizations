@@ -181,7 +181,7 @@ void main(void)
 
 the "representation" of the game state is visible on this screenshot:
 
-![screenshot](C:\D\Projekty\AdvancedOptimizations\01-start\screenshot.png)
+![screenshot](/01-start/screenshot.png)
 
 Player is represented by letter 'p' and enemies by letters 'e'. To the right of these entities there are two digits that display their HitPoints. The font is the standard system one as we did not change the graphics anyhow. Lets imagine that player is a wizard that casted "freeze spell" and now all the enemies are frozen and their HitPoints are going towards zero.  After 100 iterations the game ends with all the enemies frozen.
 
