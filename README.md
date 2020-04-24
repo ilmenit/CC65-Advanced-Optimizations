@@ -516,7 +516,7 @@ Our simple function "damage_enemy" is getting smaller with this approach, but st
 
 ### 06 - Get rid of enums - 296 ticks (3% speedup)
 
-By the definition of the C language, enums are "ints" and this is not the fastest data type on 6502. Change enums to "unsigned char" and enum values to constant #DEFINE. On 6502 use of constant values is faster than use of variables as it does not require reading values from memory. 
+In CC65 sizeof(enum_type) is 2 (equals int) and this is not the fastest data type on 6502. Change enums to "unsigned char" and enum values to constant #DEFINE. On 6502 use of constant values is faster than use of variables as it does not require reading values from memory. 
 
 We are replacing:
 
