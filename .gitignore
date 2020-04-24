@@ -1,6 +1,5 @@
-*.xex
-*.lst
 *.lab
 *.obx
 *.pck
+*.o
 /.vs

@@ -11,7 +11,7 @@ Pros:
 * Writing C code in CC65 you can compile for both 6502 and other platforms. Majority of my projects were compiled in parallel in Visual Studio or GCC, and while all the game logic was equal, only the "presentation layer" was different and platform specific. This allows to implement complex game logic and debug it using modern IDE.
 * While assembler wins in performance and code size, writing C code is incredibly fast in comparison to asm. From my experience it takes at least 5 times less time than equivalent code in assembler and later is much easier to maintain.
 * It integrates well with assembly and code-critical parts you can write in asm. Rule 80/20 applies often and just writing speed-critical parts in assembly you can keep majority of the code in C.
-* There are different benchmarks available comparing CC65 with other languages (e.g. [this one](https://github.com/KarolS/millfork-benchmarks/tree/master/6502)) that show how bad this compiler is. Usually the C code written in them is of poor quality or intentionally or not written to highlight strengths of other compiler.  [I was able to rewrite](https://github.com/KarolS/millfork-benchmarks/issues/2) (or [here](https://atariage.com/forums/topic/240919-mad-pascal/?do=findComment&comment=3395999)) majority of such benchmarks in CC65 to [improve performance](https://github.com/KarolS/millfork-benchmarks/issues/2) by hundreds of percent.
+* There are different benchmarks available comparing CC65 with other languages (e.g. [this one](https://github.com/KarolS/millfork-benchmarks/tree/master/6502)) that show how bad this compiler is. Usually the C code written in them is of poor quality,  intentionally or not written to highlight strengths of other compiler.  [I was able to rewrite](https://github.com/KarolS/millfork-benchmarks/issues/2) (or [here](https://atariage.com/forums/topic/240919-mad-pascal/?do=findComment&comment=3395999)) majority of such benchmarks in CC65 to [improve performance](https://github.com/KarolS/millfork-benchmarks/issues/2) by hundreds of percent.
 * Recently there was [a big comparison](https://atariage.com/forums/topic/240919-mad-pascal/?do=findComment&comment=4471049) of different languages prepared by Zbyti and CC65 in many tests was among the top performers, where the output code was only 20-40% slower than hand-optimized assembler code.
 * CC65 is very popular and many great games for [Atari](https://atariage.com/forums/topic/259931-atari-8-bit-games-in-c-cc65/), [NES](https://shiru.untergrund.net/software.shtml) or [C64](https://github.com/cc65/wiki/wiki/Applications-written-in-C-or-C-with-assembler) were created using this environment.
 
@@ -23,21 +23,21 @@ Cons:
 * As stated in the documentation, it does no high-level optimizations. It means that many constructs need to be simplified by the programmer to achieve good performance. This article is showing many of such best practices.
 * Working with linker configuration to achieve the best memory utilization has steep learning curve, but fortunately for the beginners it can be skipped until needed.
 
-Knowledge of writing efficient code in C is abandoned nowadays due to modern compilers that do so good optimizations, that often it is hard to manually write as good assembly. In some cases they even use superoptimizers that assure optimal code. However if you read books about the game programming from 90s, there is a lot of information what tricks were used to achieve the best performance without switching to assembly. You can still [find these "old tricks"](http://icps.u-strasbg.fr/~bastoul/local_copies/lee.html) in the Internet, however majority of them do not work on 6502 or makes even opposite effect due to 6502 CPU architecture! I'm not aware of any proper hints of coding in C for 6502 and I hope this article will fill the gap.
+Knowledge of writing efficient code in C is abandoned nowadays due to modern compilers that do so good optimizations, that often it is hard to manually write as good assembly. In some cases they even use superoptimizers that assure optimal code. However if you read books about the game programming from 90s, there is a lot of information what tricks were used to achieve the best performance without switching to assembly. You can still [find these "old tricks"](http://icps.u-strasbg.fr/~bastoul/local_copies/lee.html) in the Internet, however majority of them do not work on 6502 or makes even opposite effect due to 6502 CPU architecture! I'm aware of only [one guide](https://github.com/Fabrizio-Caruso/8bitC/blob/master/8bitC_ENG.md) of hints for coding in C for 6502 and I hope this article will fill the gap.
 
 ## CC65 alternatives
 Great article that every programmer for 6502 should read is [David A. Wheeler's "6502 Language Implementation Approaches"](https://dwheeler.com/6502/). It explains very well difficulties of making a good compiler for this platform. 
 
 Here is a list of many - but not all - CC65 alternatives:
 
-- Assembly - unquestionably wins in terms of code performance and code size, however coding in asm is very time consuming in comparison to higher-level languages and "maintability" of the code is poor, especially if you return to it after some time or for team-work.
+- Assembly - unquestionably wins in terms of code performance and code size, however coding in asm is very time consuming in comparison to higher-level languages and "maintability" of the code is poor, especially if you return to it after some time, or for a team-work.
 - Mad Pascal - new language compatible with subset of FreePascal, primarily addressing Atari platform. In active development by one author. Has performance comparable to CC65 but more Atari-specific external libraries.
 - Millfork - in early stage of development, new language that includes in the language 6502 specific features for generation of very effective code. Primarily for C64 but with growing support of other platforms
 - KickC - in early stage of development. Currently as subset of C language aiming to generate very efficient code. Author is actively working on closer compatibility with C standard.
 - Plasma - language that is often closer to assembler than higher-level languages. Aiming to provide a lot of control over generated code. Recently updated.
 - Action! - old language for high-performance code, no cross-compiler available, some language limitations prevent writing bigger programs.
 - Effectus - new cross-compiler for Action language, one-man project, that was suspended for a while and recently got resurrected with new "Mad Pascal backend".
-- Atalan - one-man project that unfortunately ended its life
+- Atalan - one-man project. Atalan unfortunately ended its life.
 - GCC-6502 - there are a few attempts to use marvelous GCC compiler to produce 6502 code, usually by placing registers on Zero Page. None is in active develpement.
 - PyMite - variant of Python for 6502, abandoned.
 - Some other 6502 languages are described [here](http://8bitworkshop.com/blog/compilers/higher-level-6502-programming.md.html)
@@ -187,7 +187,7 @@ Player is represented by letter 'p' and enemies by letters 'e'. To the right of 
 
 ### Compilation
 
-To compile the program we can use following command line:
+To compile the program we can use the following command line:
 
 ```bash
 cl65 -t atari -o game.xex game.c
@@ -216,7 +216,7 @@ There are a few language-independent or compiler-independent rules of optimizati
 * Use early proper data structures and algorithms. Good algorithm can bring much higher performance boost than low-level optimizations.
 * In case of 6502 platform, think in advance about memory layout how to make access to data fast, without additional computations.
 
-The following "best practices" are going from *basic ones* to *extreme ones* and it's up to you which make sense to apply for your code (profile it!) in price of code readability.
+The following "best practices" are going from *basic ones* to *extreme ones* and it is up to you which make sense to apply for your code (profile it!) in price of code readability.
 
 ### 01 - Start - no optimizations - 528 ticks
 
@@ -444,6 +444,7 @@ s_entity enemies[NO_ENEMIES];
 ```
 
 Unfortunately 6502 does not work well with pointers - it is 8bit processor but to address available memory space you need 16bit. To allow nested structs and complex pointer arithmetics the compiler cannot do strong optimizations here which leads to ineffective and bloated code.
+No matter how good compiler is, 16bit pointers are ineffective on 6502. Preferably they should be changed into array indexes (of "unsigned char" type), and arrays then should be max. 256 bytes long.
 
 What we can do, and I recommend to start programming with such approach, is to change "array of structs" to "struct of arrays":
 
@@ -515,7 +516,7 @@ Our simple function "damage_enemy" is getting smaller with this approach, but st
 
 ### 06 - Get rid of enums - 296 ticks (3% speedup)
 
-By the definition of language, enums are "ints" and this is not the fastest data type on 6502. Change enums to "unsigned char" and enum values to constant #DEFINE. On 6502 use of constant values is faster than use of variables as it does not require reading values from memory. 
+By the definition of the C language, enums are "ints" and this is not the fastest data type on 6502. Change enums to "unsigned char" and enum values to constant #DEFINE. On 6502 use of constant values is faster than use of variables as it does not require reading values from memory. 
 
 We are replacing:
 
@@ -658,7 +659,7 @@ result = value / 10;
 result = div_10_lookup[value];
 ```
 
-Similarly if a "switch" statement has role of a "data converter" (common cases are key codes or screen codes or rotation/reverting of object direction) it can be replaced by lookup table:
+Similarly if a "switch" statement has role of a "data converter" (common cases are key codes, screen codes or rotation/reverting of object direction) it can be replaced by lookup table:
 
 ```c
 #define ENTITY_DEAD 0
@@ -1034,7 +1035,7 @@ void one_frame()
 }
 ```
 
-What you see here that "register" keyword was used. Why to do it, when we already had draw_ptr in ZEROPAGE segment? Reason is that CC65 has some additional optimizations for use of "register" variables, that do not apply in the current CC65 version to user-defined zero-page variables. ["register" variables have additional overhead](https://cc65.github.io/doc/coding.html#s13) related to putting their value on stack when entering a function, but it's getting negligible if you define them out of loops. The code from the previous point looks much better now:
+What you see here that "register" keyword was used. Why to do it, when we already had *draw_ptr* in ZEROPAGE segment? Reason is that CC65 has some additional optimizations for "register" variables, that do not apply in the current CC65 version to user-defined zero-page variables. ["register" variables have additional overhead](https://cc65.github.io/doc/coding.html#s13) related to putting their value on stack when entering a function, but it's getting negligible if you define them out of loops. The code from the previous point looks much better now:
 
 ```assembly
 0000FCr 1               ; calc1 = game_state.entities.type[index1];
@@ -1159,7 +1160,7 @@ When writing in C for 6502 remember that:
 * Use proper data structures and algorithms from start  and add caching later.
 * Organize data for fast access:
   * Use "struct of arrays" instead of "array of structs"
-  * Keep arrays under 256 bytes whenever possible
+  * Keep arrays under 256 bytes whenever possible and use "unsigned char" to index them instead of pointers.
   * Use the smallest possible data types
 * Use lookup tables whenever possible
 * Later if needed
