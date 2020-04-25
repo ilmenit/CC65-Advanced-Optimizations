@@ -4,7 +4,7 @@ CC65 is a mature cross-compiler of C language for 6502 processor. Some people tr
 
 # Table of contents
 
-- [Why CC65?](#Why-CC65?)
+- [Why CC65?](#Why-CC65)
 - [CC65 alternatives](#CC65-alternatives)
 - [Sample program](#Sample-program)
   * [Compilation](#Compilation)
