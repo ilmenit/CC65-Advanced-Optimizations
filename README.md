@@ -2,6 +2,36 @@
 
 CC65 is a mature cross-compiler of C language for 6502 processor. Some people tried to use it (e.g. [here](https://www.xtof.info/blog/?p=714), [here](https://www.lemon64.com/forum/viewtopic.php?t=70488), or [here](https://atariage.com/forums/topic/261463-c-or-assembler-for-game-development/)) and got discouraged by the quality of the generated code, often not understanding why the code generated was slow and big. This article is aiming to show that with a few changes in the coding style you can achieve both speed and size comparable to assembly level, still having majority of the benefits of working in higher-level language.  This article base on the CC65 version 2.18 (April 2020) and we may expect that in the future the compiler will handle more optimizations mentioned here automatically.
 
+# Table of contents
+
+- [Why CC65?](#Why-CC65?)
+- [CC65 alternatives](#CC65-alternatives)
+- [Sample program](#Sample-program)
+  * [Compilation](#Compilation)
+- [Lets start optimizations](#Lets-start-optimizations)
+  * [Optimization basics](#Optimization-basics)
+  * [01 - Start - no optimizations - 528 ticks](#01%20-%20Start%20-%20no%20optimizations%20-%20528%20ticks)
+  * [02 - Compiler Options - 392 ticks (34% speedup from the previous state)](#02 - Compiler Options - 392 ticks (34% speedup from the previous state))
+  * [Sub](#sub)
+  * [Sub](#sub)
+  * [Sub](#sub)
+  * [Sub](#sub)
+  * [Sub](#sub)
+  * [Sub](#sub)
+  * [Sub](#sub)
+- [Why](#Why)
+- [Why](#Why)
+- [Why](#Why)
+- [Summary](#Summary)
+  * [Sub-heading](#sub-heading)
+    + [Sub-sub-heading](#sub-sub-heading)
+- [Heading](#heading-1)
+  * [Sub-heading](#sub-heading-1)
+    + [Sub-sub-heading](#sub-sub-heading-1)
+- [Heading](#heading-2)
+  * [Sub-heading](#sub-heading-2)
+    + [Sub-sub-heading](#sub-sub-heading-2)
+
 ## Why CC65?
 
 CC65 is one of the most "C standard compliant " environments for 6502. It has close [compliance with C99 standard](https://cc65.github.io/doc/cc65.html#s4), which is great for any C/C++ programmers and a big advantage for people with knowledge of programming languages that base on C syntax.
@@ -204,7 +234,7 @@ cl65 -t atari -Ln game.lbl --listing game.lst --add-source -o game.xex game.c
 
 # Lets start optimizations
 
-### Optimization basics
+## Optimization basics
 
 There are a few language-independent or compiler-independent rules of optimization:
 
@@ -218,7 +248,7 @@ There are a few language-independent or compiler-independent rules of optimizati
 
 The following "best practices" are going from *basic ones* to *extreme ones* and it is up to you which make sense to apply for your code (profile it!) in price of code readability.
 
-### 01 - Start - no optimizations - 528 ticks
+## 01 - Start - no optimizations - 528 ticks
 
 When compiled with the command line as above, execution ends with information that the simulation took **528 ticks**. Each tick is increased on PAL system each 1/50 second by the OS. Lets find out how well we can optimize the code from the initial state (528 ticks).
 
@@ -292,7 +322,7 @@ which is getting compiled into:
 
 it is terrible, indeed.
 
-### 02 - Compiler Options - 392 ticks (34% speedup from the previous state)
+## 02 - Compiler Options - 392 ticks (34% speedup from the previous state)
 
 CC65 does not turn on optimizations by default. The two main ones to turn on are:
 
@@ -373,7 +403,7 @@ After turning on optimizations the "damage_enemy" function looks better (majorit
 0002B5r 1  4C rr rr     L008C:    jmp     incsp2
 ```
 
-### 03 - Smallest possible unsigned data types - 380 ticks (3% speedup, often more with bigger code)
+## 03 - Smallest possible unsigned data types - 380 ticks (3% speedup, often more with bigger code)
 
 6502 is 8bit CPU and in our game code "int" data type was used. By C language definition "int" should be the fasted data type on the platform, however standard C89 of the language was defined when there were already 16bit CPU and it set "int" as minimum 16bits for majority of compilers., including CC65. 
 
@@ -411,7 +441,7 @@ typedef struct s_player {
 
 On 6502 the fastest data type is "unsigned char" and after replacing all the "ints" with "unsigned char" we went down to 380 ticks. Not a big improvement, but very important one as it saves both CPU time and space. Especially in case of more complex code the gain is big.
 
-### 04 - Get rid of C stack, globals are your friend - 334 ticks (14% speedup)
+## 04 - Get rid of C stack, globals are your friend - 334 ticks (14% speedup)
 
 As mentioned earlier, C stack on 6502 is slow and generates bloated code. We already have "static locals" but the stack is still used to pass parameters to the functions. Next step is moving the function parameters to global space. Then we do not need to use software stack anymore. Access to such variables is fast, because now the former stack function parameter is in predefined location.
 
@@ -427,7 +457,7 @@ void damage_enemy()
 
 Disadvantage is that such coding greatly lowers readability of the code and therefore this optimization I recommend to use as one of the lasts. Remember ["premature optimization is the root of all evil"](https://en.wikipedia.org/wiki/Program_optimization#When_to_optimize). 
 
-### 05 - Replace "array of structs" to "struct of arrays" - 305 ticks (10% speedup, often more with bigger code)
+## 05 - Replace "array of structs" to "struct of arrays" - 305 ticks (10% speedup, often more with bigger code)
 
 "Array of structs" is standard way of representing objects when writing in any modern higher-level language. It allows to address objects by pointer and allows easy access to object fields by increasing the pointer by object size. 
 
@@ -514,7 +544,7 @@ Our simple function "damage_enemy" is getting smaller with this approach, but st
 0001B3r 1  60           L00A0:    rts
 ```
 
-### 06 - Get rid of enums - 296 ticks (3% speedup)
+## 06 - Get rid of enums - 296 ticks (3% speedup)
 
 In CC65 sizeof(enum_type) is 2 (equals int) and this is not the fastest data type on 6502. Change enums to "unsigned char" and enum values to constant #DEFINE. On 6502 use of constant values is faster than use of variables as it does not require reading values from memory. 
 
@@ -537,7 +567,7 @@ with:
 typedef unsigned char e_entity_type;
 ```
 
-### 07 - Place commonly used variables on Zero Page - still 296 ticks (no speedup here, but makes real difference if big or nested loops are used)
+## 07 - Place commonly used variables on Zero Page - still 296 ticks (no speedup here, but makes real difference if big or nested loops are used)
 
 On 6502 first 256 bytes of memory (Zero Page) is a special place to which CPU has much faster access. It's therefore beneficial to locate often used variables or pointers there, however the place is sparse and often used also by external libraries you may use in your software (like music player).
 
@@ -569,7 +599,7 @@ ZP:         file = "", define = yes, start = $0082, size = $007E;
 
 which gives 126 bytes space, which is often more than enough for the program.
 
-### 08 - Get rid of parameter passing - 296 ticks (no speedup here, but works better together further optimizations)
+## 08 - Get rid of parameter passing - 296 ticks (no speedup here, but works better together further optimizations)
 
 One optimization that often greatly improves performance is getting rid of parameter passing at all in price of code readability (therefore should be used as the last resort optimization).
 
@@ -620,7 +650,7 @@ void one_frame()
 }
 ```
 
-### 09 - Replace calculations, switches and screen access by Lookup Tables - 67 ticks (342% speedup)
+## 09 - Replace calculations, switches and screen access by Lookup Tables - 67 ticks (342% speedup)
 
 Now we are getting to optimization that is often mandatory for any 6502 code, no matter if higher-level language or assembler is used. 6502 has limited instruction set and does not have very useful instructions like multiplication or division. To perform such operations it requires to run dedicated multiplication or division nested loops of code, or use some arithmetic tables. It is getting even more costly if multiplication or division is applied to data types larger than 1 bytes, like integers.
 
@@ -685,7 +715,7 @@ char get_entity_tile[] = {
 };
 ```
 
-### 10 - Handle "integer promotion" cases and improve array access - 34 ticks (97% speedup)
+## 10 - Handle "integer promotion" cases and improve array access - 34 ticks (97% speedup)
 
 C language does ["integer promotion"](https://www.geeksforgeeks.org/integer-promotions-in-c/), for performing math or logical operations, because "int" should be the fastest data type. On 6502 the fastest is "unsigned char", therefore such promotion in CC65 lowers performance.  While compiler generates code operating on 16bit values, later the code gets optimized to 8bit values by optimizer. Usually it works, however CC65 has problems with some constructs:
 
@@ -810,7 +840,7 @@ we have very nice code generated:
 000151r 1               .endproc
 ```
 
-### 11 - Improve array accesses even further - 32 ticks (6% speedup)
+## 11 - Improve array accesses even further - 32 ticks (6% speedup)
 
 Looking at the function above, did we achieve the optimal code generation by the compiler? Unfortunately, not. One time critical function that still requires improvement is "draw_entity", which still looks bad:
 
@@ -998,7 +1028,7 @@ We see here that it is still not perfect. CC65 optimizer does not do here good t
 
 To help optimizer we need some additional higher-level optimizations.
 
-### 12 - Inline functions, activate additional "register" keyword optimizations - 29 ticks (6% speedup)
+## 12 - Inline functions, activate additional "register" keyword optimizations - 29 ticks (6% speedup)
 
 CC65 does not inline leaf functions (there was a branch of CC65 long time ago doing this, but for some reason it was not merged to the "master branch") therefore to push performance further we can manually inline the time critical functions to the loop, to prevent function call and to help optimizer:
 
@@ -1087,7 +1117,7 @@ What you see here that "register" keyword was used. Why to do it, when we alread
 00012Dr 1  91 rr            sta     (regbank+4),y
 ```
 
-### Identify code critical places and rewrite them in assembly
+## Identify code critical places and rewrite them in assembly
 
 There are still some optimizations to be done in C, but I will stop here. If you really need to optimize time-critical code then do it in assembly. If you do not know how to do it, ask the community for help and you will be surprised how helpful 8bit programmers are!
 
@@ -1149,7 +1179,7 @@ This will be translated into a single "INC variable" assembler instruction.
 
 Usually these are so time-critical, that should be done in assembler.
 
-## Summary
+# Summary
 
 We went through a lot of different cases and were able to improve the initially generated code from **528** to **29** ticks, which is **18 times**, almost to level of hand-written assembly!
 
