@@ -71,7 +71,7 @@ void place_enemy(unsigned char x, unsigned char y)
 void set_entities()
 {
     // set entities
-    for (index1=0;index1<NO_ENEMIES;index1++)
+    for (index1 = 0; index1 < NO_ENEMIES; index1++)
     {
         place_enemy((index1*5) % SCREEN_SIZE_X, index1 / 2 + 9);
         game_state.entities.hp[index1] = 99;
@@ -86,7 +86,7 @@ void set_entities()
 void one_frame()
 {
     register unsigned char *draw_ptr;
-    for (index1=0;index1 < NO_ENEMIES;++index1)
+    for (index1 = 0; index1 < NO_ENEMIES; ++index1)
     {
         // inlined damage_enemy
         calc1 = game_state.entities.hp[index1];
@@ -97,7 +97,7 @@ void one_frame()
         }
     }
 
-    for (index1=0;index1 < NO_ENTITIES;++index1)
+    for (index1 = 0; index1 < NO_ENTITIES; ++index1)
     {
         // inlined drawing of entities
         calc1 = game_state.entities.y[index1];
@@ -106,8 +106,8 @@ void one_frame()
         calc1 = game_state.entities.type[index1];
         calc2 = get_entity_tile[calc1];
         calc1 = game_state.entities.hp[index1];
-        calc3 = div_10_lookup [ calc1 ];
-        calc4 = mod_10_lookup [ calc1 ];
+        calc3 = div_10_lookup[calc1];
+        calc4 = mod_10_lookup[calc1];
         draw_ptr[0] = calc2;
         draw_ptr[1] = calc3;
         draw_ptr[2] = calc4;
@@ -118,10 +118,10 @@ void init_lookup_tables()
 {
     unsigned char *screen_ptr = OS.savmsc;
     // init screen lookup
-    for (index1 = 0;index1<SCREEN_SIZE_Y;++index1)
+    for (index1 = 0; index1 < SCREEN_SIZE_Y; ++index1)
         screen_line_lookup[index1] = &screen_ptr[index1 * SCREEN_SIZE_X];
 
-    for (index1 = 0;index1<MAX_LOOKUP_VALUE;++index1)
+    for (index1 = 0; index1 < MAX_LOOKUP_VALUE; ++index1)
     {
         div_10_lookup[index1] = index1/10 + FIRST_DIGIT_CHAR;
         mod_10_lookup[index1] = index1%10 + FIRST_DIGIT_CHAR;
@@ -137,7 +137,7 @@ void main(void)
     set_entities();
 
     start_benchmark();
-    for (times=0;times<100;++times)
+    for (times = 0; times < 100; ++times)
         one_frame();
     end_benchmark();
 

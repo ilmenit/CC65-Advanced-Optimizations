@@ -51,7 +51,7 @@ void place_enemy(unsigned char x, unsigned char y)
 void set_entities()
 {
     // set entities
-    for (index1=0;index1<NO_ENEMIES;index1++)
+    for (index1 = 0; index1 < NO_ENEMIES; index1++)
     {
         place_enemy((index1*5) % SCREEN_SIZE_X, index1 / 2 + 9);
         game_state.entities.hp[index1] = 99;
@@ -95,7 +95,7 @@ void damage_enemy()
 void one_frame()
 {
     // draw entities
-    for (index1=0;index1 < NO_ENEMIES;index1++)
+    for (index1 = 0; index1 < NO_ENEMIES; index1++)
     {
         damage_enemy();
         draw_entity();
@@ -112,7 +112,7 @@ void main(void)
     set_entities();
 
     start_benchmark();
-    for (times=0;times<100;++times)
+    for (times = 0; times < 100; ++times)
         one_frame();
     end_benchmark();
 

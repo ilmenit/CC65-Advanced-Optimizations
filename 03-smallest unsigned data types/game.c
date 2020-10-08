@@ -40,7 +40,7 @@ void set_entities(s_game_state *game_state)
     unsigned char index;
     s_entity *e;
     // set enemies
-    for (index=0;index<_countof(game_state->enemies);index++)
+    for (index = 0; index<_countof(game_state->enemies); index++)
     {
         e = &game_state->enemies[index];
         place_enemy( e, (index*5) % SCREEN_SIZE_X, index / 2 + 9);
@@ -71,7 +71,7 @@ void draw_entity(unsigned char *screen_ptr, s_entity *e_ptr)
     unsigned char *draw_ptr = &screen_ptr[e_ptr->y * SCREEN_SIZE_X + e_ptr->x];
     *draw_ptr = get_entity_tile(e_ptr->type);
     *(++draw_ptr) = e_ptr->hp / 10 + FIRST_DIGIT_CHAR;
-    *(++draw_ptr)   = e_ptr->hp % 10 + FIRST_DIGIT_CHAR;
+    *(++draw_ptr) = e_ptr->hp % 10 + FIRST_DIGIT_CHAR;
 };
 
 void damage_enemy(s_entity *e_ptr)
@@ -87,7 +87,7 @@ void one_frame(s_game_state *game_state, unsigned char *screen_ptr)
     s_entity *e;
 
     // draw enemies
-    for (index=0;index < _countof(game_state->enemies);index++)
+    for (index = 0; index < _countof(game_state->enemies); index++)
     {
         e = &game_state->enemies[index];
         damage_enemy(e);
@@ -110,7 +110,7 @@ void main(void)
 
     start_benchmark();
 
-    for (times=0;times<100;++times)
+    for (times = 0; times < 100; ++times)
         one_frame(&game_state, screen_ptr);
     end_benchmark();
 

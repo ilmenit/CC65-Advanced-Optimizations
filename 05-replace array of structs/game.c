@@ -45,7 +45,7 @@ void set_entities()
 {
     unsigned char index;
     // set entities
-    for (index=0;index<NO_ENEMIES;index++)
+    for (index = 0; index < NO_ENEMIES; index++)
     {
         place_enemy_index = index;
         place_enemy((index*5) % SCREEN_SIZE_X, index / 2 + 9);
@@ -94,7 +94,7 @@ void one_frame()
     unsigned char index;
 
     // draw entities
-    for (index=0;index < NO_ENEMIES;index++)
+    for (index = 0; index < NO_ENEMIES; index++)
     {
         damage_enemy_index = index;
         damage_enemy();
@@ -115,7 +115,7 @@ void main(void)
     set_entities();
 
     start_benchmark();
-    for (times=0;times<100;++times)
+    for (times = 0; times < 100; ++times)
         one_frame();
     end_benchmark();
 

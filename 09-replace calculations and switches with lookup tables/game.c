@@ -63,7 +63,7 @@ void place_enemy(unsigned char x, unsigned char y)
 void set_entities()
 {
     // set entities
-    for (index1=0;index1<NO_ENEMIES;index1++)
+    for (index1 = 0; index1 < NO_ENEMIES; index1++)
     {
         place_enemy((index1*5) % SCREEN_SIZE_X, index1 / 2 + 9);
         game_state.entities.hp[index1] = 99;
@@ -80,8 +80,8 @@ void draw_entity()
     unsigned char *draw_ptr = screen_line_lookup[game_state.entities.y[index1]];
     draw_ptr += game_state.entities.x[index1];
     *draw_ptr = get_entity_tile[game_state.entities.type[index1]];
-    *(++draw_ptr) = div_10_lookup [ game_state.entities.hp[index1] ];
-    *(++draw_ptr) = mod_10_lookup [ game_state.entities.hp[index1] ];
+    *(++draw_ptr) = div_10_lookup[game_state.entities.hp[index1]];
+    *(++draw_ptr) = mod_10_lookup[game_state.entities.hp[index1]];
 };
 
 void damage_enemy()
@@ -94,7 +94,7 @@ void damage_enemy()
 void one_frame()
 {
     // draw entities
-    for (index1=0;index1 < NO_ENEMIES;index1++)
+    for (index1 = 0; index1 < NO_ENEMIES; index1++)
     {
         damage_enemy();
         draw_entity();
@@ -109,10 +109,10 @@ void init_lookup_tables()
 {
     unsigned char *screen_ptr = OS.savmsc;
     // init screen lookup
-    for (index1 = 0;index1<SCREEN_SIZE_Y;++index1)
+    for (index1 = 0; index1 < SCREEN_SIZE_Y; ++index1)
         screen_line_lookup[index1] = &screen_ptr[index1 * SCREEN_SIZE_X];
 
-    for (index1 = 0;index1<MAX_LOOKUP_VALUE;++index1)
+    for (index1 = 0; index1 < MAX_LOOKUP_VALUE; ++index1)
     {
         div_10_lookup[index1] = index1/10 + FIRST_DIGIT_CHAR;
         mod_10_lookup[index1] = index1%10 + FIRST_DIGIT_CHAR;
@@ -129,7 +129,7 @@ void main(void)
 
     start_benchmark();
 
-    for (times=0;times<100;++times)
+    for (times = 0; times < 100; ++times)
         one_frame();
     end_benchmark();
 
