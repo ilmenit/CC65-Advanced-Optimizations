@@ -59,6 +59,7 @@ A great article that every programmer for 6502 should read is [David A. Wheeler'
 Here is a list of many - but not all - CC65 alternatives:
 
 - Assembly - unquestionably wins in terms of code performance and code size, however coding in asm is very time consuming in comparison to higher-level languages, and "maintability" of the code is poor, especially if you return to it after some time, or when working in a team.
+- [LLVM-MOS](https://llvm-mos.org/) - 6502 code generator backend for LLVM. [This page](https://llvm-mos.org/wiki/Findings) described the LLVM-MOS project's approach to compiling C (and any other language that has an LLVM-targeting compiler) to efficient 6502 code.
 - [Mad-Pascal](https://github.com/tebe6502/Mad-Pascal) - a new language compatible with a subset of [FreePascal](https://www.freepascal.org/), primarily addressing the Atari platform. In active development by one author. It has performance comparable to CC65, but more Atari-specific external libraries.
 - [Millfork](https://github.com/KarolS/millfork) - in an early stage of development, a new language that includes 6502-specific features for generating very effective code. Primarily for Commodore 64, but with growing support for other platforms.
 - [KickC](https://gitlab.com/camelot/kickc) - in an early stage of development. Currently a subset of the C language, aiming to generate very efficient code. The author is actively working on closer compatibility with the C standard.
